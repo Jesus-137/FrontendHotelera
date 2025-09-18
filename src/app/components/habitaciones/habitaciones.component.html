@@ -1,1 +1,145 @@
-<p>habitaciones works!</p>
+<div class="container-fluid py-4 px-3">
+    <!-- Título y botón -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary mb-0">Habitaciones</h2>
+        <button (click)="toggleForm()" class="btn btn-gradient btn-success shadow-sm">
+            <i class="fa fa-plus me-2"></i>Registrar Habitación
+        </button>
+    </div>
+
+    <!-- Tabla de habitaciones -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle shadow-sm">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>#</th>
+                    <th>N° Habitación</th>
+                    <th>Tipo</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Capacidad</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="text-center" *ngFor="let habitacion of habitaciones; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td hidden>{{ habitacion.id }}</td>
+                    <td>{{ habitacion.numeroHabitacion }}</td>
+                    <td>{{ habitacion.tipo }}</td>
+                    <td>{{ habitacion.descripcion }}</td>
+                    <td>${{ habitacion.precio }}</td>
+                    <td>{{ habitacion.capacidad }}</td>
+                    <td>
+                        <span class="badge"
+                              [ngClass]="{
+                                  'bg-success': habitacion.estado === 'Disponible',
+                                  'bg-danger': habitacion.estado === 'Ocupada',
+                                  'bg-warning text-dark': habitacion.estado === 'Limpieza',
+                                  'bg-secondary': habitacion.estado === 'Mantenimiento'
+                              }">
+                              {{ habitacion.estado }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm me-2" (click)="editHabitaciones(habitacion)">
+                            <i class="fa fa-edit me-1"></i>Editar
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" (click)="deleteHabitacion(habitacion.id)">
+                            <i class="fa fa-trash me-1"></i>Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Formulario -->
+    <div class="card mt-5 mx-auto shadow-sm" style="max-width: 700px;" *ngIf="showForm">
+        <div class="card-header bg-primary text-white text-center">
+            <h5 class="mb-0">📝 Formulario de Habitación</h5>
+        </div>
+        <div class="card-body p-4">
+            <form [formGroup]="habitacionForm" (ngSubmit)="onSumbmit()">
+
+                <!-- N° Habitación -->
+                <div class="mb-3">
+                    <label for="numeroHabitacion" class="form-label">Número de habitación</label>
+                    <input id="numeroHabitacion" class="form-control border-primary" formControlName="numeroHabitacion" maxlength="4" />
+                    <div *ngIf="habitacionForm.get('numeroHabitacion')?.touched && habitacionForm.get('numeroHabitacion')?.invalid" class="text-danger small mt-1">
+                        <div *ngIf="habitacionForm.get('numeroHabitacion')?.errors?.['required']">Este campo es obligatorio.</div>
+                        <div *ngIf="habitacionForm.get('numeroHabitacion')?.errors?.['pattern']">Solo números (máximo 4 dígitos).</div>
+                    </div>
+                </div>
+
+                <!-- Tipo -->
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Tipo de habitación</label>
+                    <select id="tipo" class="form-select border-primary" formControlName="tipo">
+                        <option value="">Seleccione un tipo</option>
+                        <option value="Simple">Simple</option>
+                        <option value="Doble">Doble</option>
+                        <option value="Suite">Suite</option>
+                    </select>
+                    <div *ngIf="habitacionForm.get('tipo')?.touched && habitacionForm.get('tipo')?.invalid" class="text-danger small mt-1">
+                        <div *ngIf="habitacionForm.get('tipo')?.errors?.['required']">Seleccione un tipo.</div>
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" class="form-control border-primary" formControlName="descripcion" rows="3" maxlength="200"></textarea>
+                    <div *ngIf="habitacionForm.get('descripcion')?.touched && habitacionForm.get('descripcion')?.invalid" class="text-danger small mt-1">
+                        <div *ngIf="habitacionForm.get('descripcion')?.errors?.['required']">Este campo es obligatorio.</div>
+                        <div *ngIf="habitacionForm.get('descripcion')?.errors?.['maxlength']">Máximo 200 caracteres.</div>
+                    </div>
+                </div>
+
+                <!-- Precio -->
+                <div class="mb-3">
+                    <label for="precio" class="form-label">Precio ($)</label>
+                    <input id="precio" class="form-control border-primary" formControlName="precio" type="number" />
+                    <div *ngIf="habitacionForm.get('precio')?.touched && habitacionForm.get('precio')?.invalid" class="text-danger small mt-1">
+                        <div *ngIf="habitacionForm.get('precio')?.errors?.['required']">Este campo es obligatorio.</div>
+                        <div *ngIf="habitacionForm.get('precio')?.errors?.['min']">El precio debe ser mayor o igual a 0.</div>
+                    </div>
+                </div>
+
+                <!-- Capacidad -->
+                <div class="mb-3">
+                    <label for="capacidad" class="form-label">Capacidad</label>
+                    <input id="capacidad" class="form-control border-primary" formControlName="capacidad" type="number" />
+                    <div *ngIf="habitacionForm.get('capacidad')?.touched && habitacionForm.get('capacidad')?.invalid" class="text-danger small mt-1">
+                        <div *ngIf="habitacionForm.get('capacidad')?.errors?.['required']">Este campo es obligatorio.</div>
+                        <div *ngIf="habitacionForm.get('capacidad')?.errors?.['min']">Mínimo 1 persona.</div>
+                        <div *ngIf="habitacionForm.get('capacidad')?.errors?.['max']">Máximo 10 personas.</div>
+                    </div>
+                </div>
+
+                <!-- Estado -->
+                <div class="mb-4">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select id="estado" class="form-select border-primary" formControlName="estado">
+                        <option value="">Seleccione un estado</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Ocupada">Ocupada</option>
+                        <option value="Limpieza">Limpieza</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                    <div *ngIf="habitacionForm.get('estado')?.touched && habitacionForm.get('estado')?.invalid" class="text-danger small mt-1">
+                        <div *ngIf="habitacionForm.get('estado')?.errors?.['required']">Seleccione un estado.</div>
+                    </div>
+                </div>
+
+                <!-- Botón -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary px-5" [disabled]="habitacionForm.invalid">
+                        <i class="fa fa-save me-2"></i>Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

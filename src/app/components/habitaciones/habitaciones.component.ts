@@ -15,7 +15,7 @@ export class HabitacionesComponent {
   habitaciones: HabitacionResponse[] = [];
   showForm: boolean = false;
   habitacionForm: FormGroup;
-  modalText: string = 'Nueva categoria';
+  modalText: string = 'Nueva Habitacion';
   selectedHabitacion: HabitacionResponse | null = null;
   isEditMode: boolean = false;
   showACtions: boolean = true
@@ -51,7 +51,7 @@ export class HabitacionesComponent {
   }
 
   resetForm(): void {
-    this.modalText = 'Nueva Region';
+    this.modalText = 'Nueva Habitacion';
     this.isEditMode = false;
     this.selectedHabitacion = null;
     this.habitacionForm.reset();
@@ -87,7 +87,7 @@ export class HabitacionesComponent {
           }
         })
       } else {
-        this.habitacionesService.postHaboitaciones(habitacionData).subscribe({
+        this.habitacionesService.postHabitaciones(habitacionData).subscribe({
           next: habitacion => {
             this.habitaciones.push(habitacion);
             Swal.fire({

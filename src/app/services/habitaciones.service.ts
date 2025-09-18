@@ -24,7 +24,7 @@ export class HabitacionesService {
         )
     }
 
-    postHaboitaciones(habitacion: HabitacionRequest): Observable<HabitacionResponse> {
+    postHabitaciones(habitacion: HabitacionRequest): Observable<HabitacionResponse> {
         return this.http.post<HabitacionResponse>(this.apiUrl, habitacion).pipe(
             catchError(error => {
                 console.log('Error al registrar la habitacion', error);
