@@ -27,7 +27,7 @@ export class HuespedesComponent {
     nombre:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
     apellido:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
     email:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
-    telefono:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
+    telefono:['',[ Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
     documento:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
     nacionalidad:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]]
   });
@@ -58,12 +58,7 @@ this.modalText = 'Nuevo Huesped';
 
 editHuesped(huesped: HuespedResponse): void{
 this.showForm =  true;
-this.modalText = 'Editando huesped ' + huesped.nombre;
-this.modalText = 'Editando huesped ' + huesped.apellido;
-this.modalText = 'Editando huesped ' + huesped.email;
-this.modalText = 'Editando huesped ' + huesped.telefono;
-this.modalText = 'Editando huesped ' + huesped.documento;
-this.modalText = 'Editando huesped ' + huesped.nacionalidad;
+this.modalText = 'Editando Huesped: ' + huesped.nombre;
 this.isEditMode = true;
 this.selectedHuesped = huesped;
 this.huespedForm.patchValue({
@@ -108,7 +103,7 @@ this.huespedService.postHuesped(huespedData).subscribe({
 }
 deleteHuesped(huespedId: number):void{
 Swal.fire({
-title: 'Estas seguro que deseas eliminar este huesped?',
+title: '¿Estas seguro que deseas eliminar a este huesped?',
 text: 'Eliminar huesped',
 icon: 'question',
 showCancelButton: true,
@@ -119,7 +114,7 @@ showConfirmButton: true
         next: deletedHuesped => {
           this.huesped = this.huesped.filter(hue => hue.id !== huespedId);
           Swal.fire({
-            title: 'Huesped ' + deletedHuesped.nombre + 'eliminada',
+            title: 'Huesped ' + deletedHuesped.nombre + ' fue eliminado',
             text: 'El huesped fue eliminado correctamente',
             icon:'success'
           })
