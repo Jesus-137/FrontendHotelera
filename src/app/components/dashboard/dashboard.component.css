@@ -1,0 +1,30 @@
+:host {
+    background-color: #1e272e;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    
+}
+img {
+    width: 210px;
+    border-radius: 10px;
+    -webkit-box-reflect: below 2.5
+    linear-gradient(transparent, transpared, rgba(3,3,3,0.2));
+    border: 2px ridge #a5b1c2;
+    margin: 5px;
+}
+
+.card {
+    transition: 0.5s ease;
+    cursor: pointer;
+}
+.container:hover > :not(:hover){
+    opacity: 0.3;
+}
+.card:hover{
+    transform: scale(1.1);
+    filter: grayscale(0%);
+}
