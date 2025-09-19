@@ -1,1 +1,159 @@
-<p>reservas works!</p>
+<div class="container-fluid py-4 px-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary mb-0">Reservaciones</h2>
+        <button (click)="toggleForm()" class="btn btn-gradient btn-success shadow-sm">
+            <i class="fa fa-plus me-2"></i>Registrar Habitación
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle shadow-sm">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>#</th>
+                    <th>Huesped</th>
+                    <th>Habitacion</th>
+                    <th>Fecha de entrada</th>
+                    <th>Fecha de salida</th>
+                    <th>Noches</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="text-center" *ngFor="let reserva of reservaciones; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td hidden>{{reserva.id}}</td>
+                    <td>{{reserva.huesped}}</td>
+                    <td>{{reserva.habitacion}}</td>
+                    <td>{{reserva.fechaEntrada}}</td>
+                    <td>{{reserva.fechaSalida}}</td>
+                    <td>{{reserva.noches}}</td>
+                    <td>{{reserva.total}}</td>
+                    <td>
+                        <span class="badge" [ngClass]="{
+                                  'bg-success': reserva.estado === 'Disponible',
+                                  'bg-danger': reserva.estado === 'Ocupada',
+                                  'bg-warning text-dark': reserva.estado === 'Limpieza',
+                                  'bg-secondary': reserva.estado === 'Mantenimiento'
+                              }">
+                            {{ reserva.estado }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm me-2" (click)="editReservaciones(reserva)">
+                            <i class="fa fa-edit me-1"></i>Editar
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" (click)="deleteReservaciones(reserva.id)">
+                            <i class="fa fa-trash me-1"></i>Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="showForm" class="card shadow-sm mt-4 mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white text-center fw-bold">
+            {{ modalText }}
+        </div>
+        <div class="card-body">
+            <form [formGroup]="reservaForm" (ngSubmit)="onSumbmit()">
+
+                <!-- Huesped -->
+                <div class="mb-3">
+                    <label for="huesped" class="form-label fw-semibold">Huésped</label>
+                    <input id="huesped" type="text" class="form-control" formControlName="huesped"
+                        placeholder="Nombre del huésped" />
+                    <div *ngIf="reservaForm.get('huesped')?.touched && reservaForm.get('huesped')?.invalid"
+                        class="text-danger small mt-1">
+                        <div *ngIf="reservaForm.get('huesped')?.errors?.['required']">Este campo es obligatorio.</div>
+                        <div *ngIf="reservaForm.get('huesped')?.errors?.['minlength']">Mínimo 3 caracteres.</div>
+                    </div>
+                </div>
+
+                <!-- Habitacion -->
+                <div class="mb-3">
+                    <label for="habitacion" class="form-label fw-semibold">Habitación</label>
+                    <input id="habitacion" type="text" class="form-control" formControlName="habitacion"
+                        placeholder="Número o tipo de habitación" />
+                    <div *ngIf="reservaForm.get('habitacion')?.touched && reservaForm.get('habitacion')?.invalid"
+                        class="text-danger small mt-1">
+                        <div *ngIf="reservaForm.get('habitacion')?.errors?.['required']">Este campo es obligatorio.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fecha Entrada -->
+                <div class="mb-3">
+                    <label for="fechaEntrada" class="form-label fw-semibold">Fecha de entrada</label>
+                    <input id="fechaEntrada" type="date" class="form-control" formControlName="fechaEntrada" />
+                    <div *ngIf="reservaForm.get('fechaEntrada')?.touched && reservaForm.get('fechaEntrada')?.invalid"
+                        class="text-danger small mt-1">
+                        <div *ngIf="reservaForm.get('fechaEntrada')?.errors?.['required']">Campo obligatorio.</div>
+                    </div>
+                </div>
+
+                <!-- Fecha Salida -->
+                <div class="mb-3">
+                    <label for="fechaSalida" class="form-label fw-semibold">Fecha de salida</label>
+                    <input id="fechaSalida" type="date" class="form-control" formControlName="fechaSalida" />
+                    <div *ngIf="reservaForm.get('fechaSalida')?.touched && reservaForm.get('fechaSalida')?.invalid"
+                        class="text-danger small mt-1">
+                        <div *ngIf="reservaForm.get('fechaSalida')?.errors?.['required']">Campo obligatorio.</div>
+                    </div>
+                </div>
+
+                <!-- Noches -->
+                <div class="mb-3">
+                    <label for="noche" class="form-label fw-semibold">Noches</label>
+                    <input id="noche" type="number" class="form-control" formControlName="noche" min="1" />
+                    <div *ngIf="reservaForm.get('noche')?.touched && reservaForm.get('noche')?.invalid"
+                        class="text-danger small mt-1">
+                        <div *ngIf="reservaForm.get('noche')?.errors?.['required']">Campo obligatorio.</div>
+                        <div *ngIf="reservaForm.get('noche')?.errors?.['min']">Mínimo 1 noche.</div>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="mb-3">
+                    <label for="total" class="form-label fw-semibold">Total</label>
+                    <input id="total" type="number" class="form-control" formControlName="total" min="0" />
+                    <div *ngIf="reservaForm.get('total')?.touched && reservaForm.get('total')?.invalid"
+                        class="text-danger small mt-1">
+                        <div *ngIf="reservaForm.get('total')?.errors?.['required']">Campo obligatorio.</div>
+                        <div *ngIf="reservaForm.get('total')?.errors?.['min']">El total debe ser igual o mayor a 0.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estado -->
+                <div class="mb-3">
+                    <label for="estado" class="form-label fw-semibold">Estado</label>
+                    <select id="estado" class="form-select" formControlName="estado">
+                        <option value="">Seleccione un estado</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Ocupada">Ocupada</option>
+                        <option value="Limpieza">Limpieza</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                    <div *ngIf="reservaForm.get('estado')?.touched && reservaForm.get('estado')?.invalid"
+                        class="text-danger small mt-1">
+                        <div *ngIf="reservaForm.get('estado')?.errors?.['required']">Campo obligatorio.</div>
+                    </div>
+                </div>
+
+                <!-- Botón guardar -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success px-4 shadow-sm" [disabled]="reservaForm.invalid">
+                        <i class="fa fa-save me-2"></i>Guardar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+
+</div>
