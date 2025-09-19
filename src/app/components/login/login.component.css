@@ -11,7 +11,7 @@
     justify-content: center;
     align-items: center;
     background: url('/images/hotel1.jpg');
-    animation: gradientBG 15s ease infinite;
+    animation: gradientBG 30s ease infinite;
     overflow: hidden
 }
 
@@ -27,7 +27,7 @@
     padding: 40px;
     border-radius: 20px;
     backdrop-filter: blur(15px);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(20, 20, 20, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4);
     z-index: 10;
@@ -58,7 +58,7 @@
     text-align: center;
     letter-spacing: 1px;
     margin-top: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -103,7 +103,7 @@
 .login-btn {
     width: 100%;
     padding: 10px;
-    background: rgb(0, 10, 206);
+    background: rgb(53, 134, 214);
     border: none;
     outline: none;
     border-radius: 35px;
@@ -115,8 +115,18 @@
     box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
 }
 
-.login-btn:hover {
-    background: rgba(0, 4, 255, 0.655);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2); 
+.user-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
 }
+
+.user-icon img {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
