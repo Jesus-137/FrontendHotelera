@@ -21,15 +21,28 @@ export class HuespedesComponent {
  isEditMode: boolean = false;
  showActions: boolean = true;
 
+
   constructor(private huespedService: HuespedService, private formBuilder: FormBuilder){
   this.huespedForm = formBuilder.group({
     id: [null],
-    nombre:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
-    apellido:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
-    email:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
-    telefono:['',[ Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-    documento:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
-    nacionalidad:['',[ Validators.required, Validators.minLength(1), Validators.maxLength(30)]]
+    nombre:['',[   Validators.required,
+  Validators.minLength(4),
+  Validators.maxLength(30),
+  Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    apellido:['',[ Validators.required,
+  Validators.minLength(4),
+  Validators.maxLength(30),
+  Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    email:['',[ Validators.required,Validators.email,Validators.maxLength(30)]],
+    telefono:['',[ Validators.required, Validators.pattern('^[0-9]{10}$')]],
+    documento:['',[ Validators.required,
+  Validators.minLength(3),
+  Validators.maxLength(30),
+  Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]],
+    nacionalidad:['',[ Validators.required,
+  Validators.minLength(4),
+  Validators.maxLength(30),
+  Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$')]]
   });
  }
 ngOnInit():void{
@@ -66,41 +79,63 @@ this.huespedForm.patchValue({
 });
 }
 
-onSubmit(): void{
-if(this.huespedForm.valid){
+onSubmit(): void {
+  // 🔍 Si el formulario es inválido, marcar todos los campos como tocados
+  if (this.huespedForm.invalid) {
+    this.huespedForm.markAllAsTouched();
+    return;
+  }
+
   const huespedData = this.huespedForm.value;
-  if(this.isEditMode){
+
+  if (this.isEditMode) {
+    // 🛠 Editar huésped existente
     this.huespedService.putHuesped(huespedData, huespedData.id).subscribe({
       next: huesped => {
         const index = this.huesped.findIndex(hue => hue.id === huesped.id);
-        if(index !== -1){
+        if (index !== -1) {
           this.huesped[index] = huesped;
         }
         Swal.fire({
-          icon:'success',
-          title: 'Huesped Actualizado',
-          text: 'El huesped ha sido actualizado correctamente'
+          icon: 'success',
+          title: 'Huésped Actualizado',
+          text: 'El huésped ha sido actualizado correctamente'
         });
         this.resetForm();
         this.showForm = false;
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al actualizar el huésped.'
+        });
       }
     });
-  }else{
-this.huespedService.postHuesped(huespedData).subscribe({
+  } else {
+    // ✅ Registrar nuevo huésped
+    this.huespedService.postHuesped(huespedData).subscribe({
       next: huesped => {
         this.huesped.push(huesped);
         Swal.fire({
-          icon:'success',
-          title: 'Huesped Registrado',
-          text: 'El huesped ha sido registrado correctamente'
+          icon: 'success',
+          title: 'Huésped Registrado',
+          text: 'El huésped ha sido registrado correctamente'
         });
         this.resetForm();
         this.showForm = false;
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al registrar el huésped.'
+        });
       }
     });
   }
 }
-}
+
 deleteHuesped(huespedId: number):void{
 Swal.fire({
 title: '¿Estas seguro que deseas eliminar a este huesped?',
@@ -123,4 +158,13 @@ showConfirmButton: true
     }
   });
 }
+
+soloNumeros(event: KeyboardEvent) {
+  const charCode = event.key.charCodeAt(0);
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault(); // bloquea letras
+  }
 }
+}
+
+
