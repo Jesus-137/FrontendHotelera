@@ -4,6 +4,7 @@ import { HabitacionesComponent } from './components/habitaciones/habitaciones.co
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ReservasComponent } from './components/reservas/reservas.component';
+import { HuespedesComponent } from './components/huespedes/huespedes.component';
 
 const routes: Routes = [
   {path:'', redirectTo: '/login', pathMatch: 'full'},
@@ -13,6 +14,7 @@ const routes: Routes = [
     children: [
       {path: 'habitaciones', component: HabitacionesComponent, pathMatch: 'full'},
       {path: 'reservaciones', component: ReservasComponent, pathMatch: 'full'},
+      {path: 'huespedes', component: HuespedesComponent, pathMatch: 'full'}
     ]
   }
 ];
