@@ -17,6 +17,7 @@ const routes: Routes = [
       {path: 'huespedes', component: HuespedesComponent, pathMatch: 'full'}
     ]
   }
+
 ];
 
 @NgModule({
